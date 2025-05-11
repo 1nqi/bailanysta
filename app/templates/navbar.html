@@ -1,0 +1,121 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}" data-translate="home">Bailanysta</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profile_list' %}" data-translate="profile_list">Profile List</a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}" data-translate="logout">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}" data-translate="register">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}" data-translate="login">Login</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'search' %}" data-translate="search">Search</a>
+        </li>
+        
+        
+      </ul>
+
+      {% if user.is_authenticated %}
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-bell"></i>
+              <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                0
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" id="notifications-list" aria-labelledby="notificationsDropdown">
+              <li><div class="dropdown-item text-center">Loading...</div></li>
+            </ul>
+          </li>
+          <li class="nav-link navbar-brand">
+            <a href="{% url 'profile' request.user.id %}">
+{% if user.profile.profile_image %}
+<img src="{{ user.profile.profile_image.url }}" class="rounded-circle" width=30>
+{% else %}
+    <img src="{% static 'images/default_profile_pic.png' %}" class="img-fluid rounded-circle" alt="Profile Image" width=30>
+
+{% endif %}
+            </a>
+            
+          </li>
+        </ul>
+      {% endif %}
+      <button id="theme-toggle-btn" class="theme-toggle ms-3" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+      <button id="language-btn" class="btn btn-outline-light ms-2" onclick="toggleLanguage()" data-translate="language">Язык</button>
+
+      <!--<form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>-->
+
+    </div>
+  </div>
+</nav>
+
+{% if user.is_authenticated %}
+<script>
+function updateNotifications() {
+  fetch('/notifications/')
+    .then(response => response.json())
+    .then(data => {
+      const badge = document.getElementById('notification-badge');
+      const notificationsList = document.getElementById('notifications-list');
+      
+      if (data.unread_count > 0) {
+        badge.style.display = 'block';
+        badge.textContent = data.unread_count;
+      } else {
+        badge.style.display = 'none';
+      }
+
+      if (data.notifications.length === 0) {
+        notificationsList.innerHTML = '<li><div class="dropdown-item text-center">No notifications</div></li>';
+        return;
+      }
+
+      notificationsList.innerHTML = data.notifications.map(notification => `
+        <li>
+          <a class="dropdown-item ${notification.is_read ? '' : 'fw-bold'}" 
+             href="${notification.khabar_id ? '/khabar/' + notification.khabar_id + '/' : '#'}"
+             onclick="markAsRead(${notification.id})">
+            ${notification.message}
+            <small class="d-block text-muted">${notification.created_at}</small>
+          </a>
+        </li>
+      `).join('');
+    });
+}
+
+function markAsRead(notificationId) {
+  fetch(`/notifications/${notificationId}/mark-read/`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        updateNotifications();
+      }
+    });
+}
+
+// Update notifications every 30 seconds
+setInterval(updateNotifications, 30000);
+
+// Initial update
+document.addEventListener('DOMContentLoaded', updateNotifications);
+</script>
+{% endif %}
