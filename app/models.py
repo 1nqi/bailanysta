@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
 class Khabar(models.Model):
-    user = models.ForeignKey(User, related_name= "khabars",on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, related_name= "khabars", on_delete=models.CASCADE)
     body = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="khabar_like", blank=True)
