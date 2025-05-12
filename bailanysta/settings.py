@@ -17,6 +17,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://bailanysta-2.onrender.com",
+    "http://localhost:8000"
+]
 
 # Application definition
 
