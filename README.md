@@ -55,8 +55,6 @@ pip install -r requirements.txt
 4. Создайте файл `.env` в корневой директории проекта и добавьте следующие переменные:
 ```
 GEMINI_API_KEY=your-gemini-api-key
-DEBUG=True
-SECRET_KEY=your-secret-key
 ```
 
 5. Примените миграции:
