@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 
 class ProfilePicForm(forms.ModelForm):
     profile_image = forms.ImageField(required=False, label="Profile Picture")
-    profile_bio = forms.CharField(required=False, label="Profile Bio", widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Profile Bio'}))
+    bio = forms.CharField(required=False, label="Profile Bio", widget=forms.Textarea(attrs={'class':'form-control', 'placeholder':'Profile Bio'}))
     github_link =  forms.CharField(required=False, label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Github Link'}))
     instagram_link = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Instagram Link'}))
     telegram_link =  forms.CharField(required=False, label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Telegram Link'}))
 
     class Meta:
         model = Profile
-        fields = ('profile_image', 'profile_bio',  'github_link', 'instagram_link', 'telegram_link', )
+        fields = ('profile_image', 'bio',  'github_link', 'instagram_link', 'telegram_link', )
 
 
 

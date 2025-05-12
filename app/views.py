@@ -55,7 +55,7 @@ def unfollow(request, pk):
         return redirect('home')
 
 def create_notification(sender, recipient, notification_type, khabar=None, comment=None):
-    if sender != recipient:  # Don't create notification if user is notifying themselves
+    if sender != recipient: 
         Notification.objects.create(
             sender=sender,
             recipient=recipient,
